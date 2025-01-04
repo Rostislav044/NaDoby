@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from 'next/link';
 
 import { useLanguage } from "@/app/LanguageContext"; // Подключаем контекст для языка
 import styles from "@/app/styles/Menu.styles.module.scss"; // Стили для меню
@@ -139,7 +140,13 @@ const Menu = () => {
           <li>{translation.contact}</li>
         </ul>
 
-        <div className={styles.menuDiv}>{translation.listYourProperty}</div>
+        {/* <div className={styles.menuDiv}>{translation.listYourProperty}</div> */}
+
+        <li>
+    <Link href="/add-apartment">
+      {translation.listYourProperty}
+    </Link>
+  </li>
       </nav>
     </div>
   );
