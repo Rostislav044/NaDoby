@@ -31,13 +31,13 @@ export default function Header() {
           <p className={styles.homLogo}>NaDoby.com.ua</p>
           
           <div className={styles.headerDiv}>
-            <Image
+            {/* <Image
               src="/avtoriz.svg"
               alt="авторизация"
               width={30}
               height={30}
               onClick={toggleLogin} // Добавляем обработчик клика для авторизации
-            />
+            /> */}
             <Image
               src="/burger.svg"
               alt="Меню"
