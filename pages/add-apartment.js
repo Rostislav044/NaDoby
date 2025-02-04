@@ -1,115 +1,5 @@
 
 
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import styles from '@/app/styles/Add-apartment.module.scss'; // Импорт стилей
-
-// const AddApartment = () => {
-//   const [formData, setFormData] = useState({
-//     city: '',
-//     district: '',
-//     metro: '',
-//     hasMetro: false,
-//     description: '',
-//     price: '',
-//   });
-
-//   const [photos, setPhotos] = useState([]);
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setFormData({
-//       ...formData,
-//       [name]: type === 'checkbox' ? checked : value,
-//     });
-//   };
-
-//   const handleFileChange = (e) => {
-//     setPhotos(e.target.files);
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setIsSubmitting(true);
-
-//     const data = new FormData();
-//     Object.keys(formData).forEach((key) => {
-//       data.append(key, formData[key]);
-//     });
-
-//     for (let i = 0; i < photos.length; i++) {
-//       data.append('photos', photos[i]);
-//     }
-
-//     try {
-//       const response = await axios.post('http://localhost:3001/api/apartments/add', data, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//         },
-//       });
-//       alert('Квартира успешно добавлена!');
-//     } catch (error) {
-//       console.error('Ошибка при добавлении квартиры:', error);
-//       alert('Произошла ошибка, попробуйте еще раз.');
-//     } finally {
-//       setIsSubmitting(false);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>Добавить квартиру</h1>
-//       <form className={styles.form} onSubmit={handleSubmit}>
-//         <label className={styles.label}>
-//           Город:
-//           <input className={styles.input} type="text" name="city" value={formData.city} onChange={handleChange} required />
-//         </label>
-//         <label className={styles.label}>
-//           Район:
-//           <input className={styles.input} type="text" name="district" value={formData.district} onChange={handleChange} required />
-//         </label>
-//         <label className={styles.label}>
-//           Метро:
-//           <input className={styles.input} type="text" name="metro" value={formData.metro} onChange={handleChange} />
-//         </label>
-//         <label className={styles.label}>
-//           Есть метро:
-//           <input className={styles.input} type="checkbox" name="hasMetro" checked={formData.hasMetro} onChange={handleChange} />
-//         </label>
-//         <label className={styles.label}>
-//           Описание:
-//           <textarea className={styles.textarea} name="description" value={formData.description} onChange={handleChange} required></textarea>
-//         </label>
-//         <label className={styles.label}>
-//           Цена:
-//           <input
-//             className={styles.input}
-//             type="number"
-//             name="price"
-//             value={formData.price}
-//             onChange={handleChange}
-//             required
-//             min="0"
-//             placeholder="Введите цену"
-//           />
-//         </label>
-//         <label className={styles.label}>
-//           Фотографии:
-//           <input className={styles.input} type="file" multiple onChange={handleFileChange} accept="image/*" required />
-//         </label>
-//         <button className={styles.button} type="submit" disabled={isSubmitting}>
-//           {isSubmitting ? 'Добавление...' : 'Добавить'}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default AddApartment;
-
-
-
 
 // import React, { useState } from 'react';
 // import axios from 'axios';
@@ -121,155 +11,35 @@
 //     city: '',
 //     district: '',
 //     metro: '',
-//     hasMetro: false,
 //     description: '',
 //     price: '',
 //   });
 
 //   const [photos, setPhotos] = useState([]);
 //   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [showMetro, setShowMetro] = useState(false);
+
 //   const googleMapsApiKey = "AIzaSyBBFJdnxDmbAko4mbzBzJ-yozBBx_gpY3w";
-//   // Ваш ключ API Google Maps
 
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setFormData({
-//       ...formData,
-//       [name]: type === 'checkbox' ? checked : value,
-//     });
-//   };
+//   // Обработка выбора города
+//   const handleCitySelect = (place) => {
+//     const formattedAddress = place?.formatted_address || '';
+//     setFormData((prevData) => ({
+//       ...prevData,
+//       city: formattedAddress,
+//     }));
 
-//   const handleFileChange = (e) => {
-//     setPhotos(e.target.files);
-//   };
+//     // Проверка, если выбран Киев или Харьков, показываем поле метро
+//     const city = formattedAddress.toLowerCase();
+//     const isKyiv = ['киев', 'київ', 'kyiv'].some((name) => city.includes(name));
+//     const isKharkiv = ['харьков', 'харків', 'kharkiv'].some((name) => city.includes(name));
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setIsSubmitting(true);
-
-//     const data = new FormData();
-//     Object.keys(formData).forEach((key) => {
-//       data.append(key, formData[key]);
-//     });
-
-//     for (let i = 0; i < photos.length; i++) {
-//       data.append('photos', photos[i]);
+//     if (isKyiv || isKharkiv) {
+//       setShowMetro(true);
+//     } else {
+//       setShowMetro(false);
+//       setFormData((prevData) => ({ ...prevData, metro: '' }));
 //     }
-
-//     try {
-//       const response = await axios.post('http://localhost:3001/api/apartments/add', data, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//         },
-//       });
-//       alert('Квартира успешно добавлена!');
-//     } catch (error) {
-//       console.error('Ошибка при добавлении квартиры:', error);
-//       alert('Произошла ошибка, попробуйте еще раз.');
-//     } finally {
-//       setIsSubmitting(false);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>Добавить квартиру</h1>
-//       <form className={styles.form} onSubmit={handleSubmit}>
-//         <label className={styles.label}>
-//           Город:
-//           <Autocomplete
-//             apiKey={googleMapsApiKey}
-//             onPlaceSelected={(place) => {
-//               const formattedAddress = place?.formatted_address || "";
-//               setFormData((prevData) => ({
-//                 ...prevData,
-//                 city: formattedAddress,
-//               }));
-//             }}
-//             options={{
-//               types: ["(cities)"], // Ограничить результат только городами
-//               componentRestrictions: { country: "ua" }, // Ограничение по стране (для Украины)
-//             }}
-//             placeholder="Введите город"
-//             value={formData.city}
-//             onChange={handleChange}
-//           />
-//         </label>
-//         <label className={styles.label}>
-//           Район:
-//           <input className={styles.input} type="text" name="district" value={formData.district} onChange={handleChange} required />
-//         </label>
-//         <label className={styles.label}>
-//           Метро:
-//           <input className={styles.input} type="text" name="metro" value={formData.metro} onChange={handleChange} />
-//         </label>
-//         <label className={styles.label}>
-//           Есть метро:
-//           <input className={styles.input} type="checkbox" name="hasMetro" checked={formData.hasMetro} onChange={handleChange} />
-//         </label>
-//         <label className={styles.label}>
-//           Описание:
-//           <textarea className={styles.textarea} name="description" value={formData.description} onChange={handleChange} required></textarea>
-//         </label>
-//         <label className={styles.label}>
-//           Цена:
-//           <input
-//             className={styles.input}
-//             type="number"
-//             name="price"
-//             value={formData.price}
-//             onChange={handleChange}
-//             required
-//             min="0"
-//             placeholder="Введите цену"
-//           />
-//         </label>
-//         <label className={styles.label}>
-//           Фотографии:
-//           <input className={styles.input} type="file" multiple onChange={handleFileChange} accept="image/*" required />
-//         </label>
-//         <button className={styles.button} type="submit" disabled={isSubmitting}>
-//           {isSubmitting ? 'Добавление...' : 'Добавить'}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default AddApartment;
-
-
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import Autocomplete from 'react-google-autocomplete';
-// import styles from '@/app/styles/Add-apartment.module.scss'; // Импорт стилей
-
-// const AddApartment = () => {
-//   const [formData, setFormData] = useState({
-//     city: '',
-//     district: '',
-//     metro: '',
-//     description: '',
-//     price: '',
-//   });
-
-//   const [photos, setPhotos] = useState([]);
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-//   const [showMetro, setShowMetro] = useState(false); // Для управления видимостью поля "Метро"
-//   const googleMapsApiKey = "AIzaSyBBFJdnxDmbAko4mbzJ-yozBBx_gpY3w";
-
-//   // Обработка изменения значений в форме
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setFormData({
-//       ...formData,
-//       [name]: type === 'checkbox' ? checked : value,
-//     });
-//   };
-
-//   // Обработка изменения файлов (фотографий)
-//   const handleFileChange = (e) => {
-//     setPhotos(e.target.files);
 //   };
 
 //   // Обработка отправки формы
@@ -301,29 +71,7 @@
 //     }
 //   };
 
-//   // Обработка выбора города
-//   const handleCitySelect = (place) => {
-//     const formattedAddress = place?.formatted_address || '';
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       city: formattedAddress,
-//     }));
-
-//     // Проверка на совпадение с Киевом или Харьковом (учитываются разные написания)
-//     const city = formattedAddress.toLowerCase();
-//     const isKyiv = ['киев', 'київ', 'kyiv'].some((name) => city.includes(name));
-//     const isKharkiv = ['харьков', 'харків', 'kharkiv'].some((name) => city.includes(name));
-
-//     if (isKyiv || isKharkiv) {
-//       setShowMetro(true); // Показываем поле метро, если выбран Киев или Харьков
-//     } else {
-//       setShowMetro(false); // Скрываем поле метро, если выбран другой город
-//       setFormData((prevData) => ({
-//         ...prevData,
-//         metro: '', // Очищаем значение метро
-//       }));
-//     }
-//   };
+  
 
 //   return (
 //     <div>
@@ -336,12 +84,11 @@
 //             apiKey={googleMapsApiKey}
 //             onPlaceSelected={handleCitySelect}
 //             options={{
-//               types: ['(cities)'], // Ограничить результат только городами
+//               types: ['(cities)'], // Ограничение результата только городами
 //               componentRestrictions: { country: 'ua' }, // Ограничение по стране (Украина)
 //             }}
 //             placeholder="Введите город"
-//             value={formData.city}
-//             onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+//             className={styles.inputCity}
 //           />
 //         </label>
 
@@ -353,12 +100,17 @@
 //             type="text"
 //             name="district"
 //             value={formData.district}
-//             onChange={handleChange}
+//             onChange={(e) =>
+//               setFormData((prevData) => ({
+//                 ...prevData,
+//                 district: e.target.value,
+//               }))
+//             }
 //             required
 //           />
 //         </label>
 
-//         {/* Поле ввода метро (показывается только для Киева и Харькова) */}
+//         {/* Поле метро (только если выбран Киев или Харьков) */}
 //         {showMetro && (
 //           <label className={styles.label}>
 //             Метро:
@@ -367,24 +119,34 @@
 //               type="text"
 //               name="metro"
 //               value={formData.metro}
-//               onChange={handleChange}
+//               onChange={(e) =>
+//                 setFormData((prevData) => ({
+//                   ...prevData,
+//                   metro: e.target.value,
+//                 }))
+//               }
 //             />
 //           </label>
 //         )}
 
-//         {/* Поле ввода описания */}
+//         {/* Поле описания */}
 //         <label className={styles.label}>
 //           Описание:
 //           <textarea
 //             className={styles.textarea}
 //             name="description"
 //             value={formData.description}
-//             onChange={handleChange}
+//             onChange={(e) =>
+//               setFormData((prevData) => ({
+//                 ...prevData,
+//                 description: e.target.value,
+//               }))
+//             }
 //             required
 //           ></textarea>
 //         </label>
 
-//         {/* Поле ввода цены */}
+//         {/* Поле цены */}
 //         <label className={styles.label}>
 //           Цена:
 //           <input
@@ -392,7 +154,12 @@
 //             type="number"
 //             name="price"
 //             value={formData.price}
-//             onChange={handleChange}
+//             onChange={(e) =>
+//               setFormData((prevData) => ({
+//                 ...prevData,
+//                 price: e.target.value,
+//               }))
+//             }
 //             required
 //             min="0"
 //             placeholder="Введите цену"
@@ -406,13 +173,13 @@
 //             className={styles.input}
 //             type="file"
 //             multiple
-//             onChange={handleFileChange}
+//             onChange={(e) => setPhotos(e.target.files)}
 //             accept="image/*"
 //             required
 //           />
 //         </label>
 
-//         {/* Кнопка отправки формы */}
+//         {/* Кнопка отправки */}
 //         <button className={styles.button} type="submit" disabled={isSubmitting}>
 //           {isSubmitting ? 'Добавление...' : 'Добавить'}
 //         </button>
@@ -454,11 +221,16 @@
 //       city: formattedAddress,
 //     }));
 
-//     // Проверка, если выбран город, показываем поле метро (убрали логику для Киева и Харькова)
-//     if (formattedAddress) {
-//       setShowMetro(true); // Здесь можно оставить логику по показу метро, если хотите.
+//     // Проверка, если выбран Киев или Харьков, показываем поле метро
+//     const city = formattedAddress.toLowerCase();
+//     const isKyiv = ['киев', 'київ', 'kyiv'].some((name) => city.includes(name));
+//     const isKharkiv = ['харьков', 'харків', 'kharkiv'].some((name) => city.includes(name));
+
+//     if (isKyiv || isKharkiv) {
+//       setShowMetro(true);
 //     } else {
 //       setShowMetro(false);
+//       setFormData((prevData) => ({ ...prevData, metro: '' }));
 //     }
 //   };
 
@@ -477,12 +249,17 @@
 //     }
 
 //     try {
-//       await axios.post('http://localhost:3001/api/apartments/add', data, {
+//       const response = await axios.post('http://localhost:3001/api/apartments/add', data, {
 //         headers: {
 //           'Content-Type': 'multipart/form-data',
 //         },
 //       });
+
 //       alert('Квартира успешно добавлена!');
+      
+//       // Отправляем событие для обновления NewRealty
+//       window.dispatchEvent(new Event('apartmentAdded'));
+
 //     } catch (error) {
 //       console.error('Ошибка при добавлении квартиры:', error);
 //       alert('Произошла ошибка, попробуйте еще раз.');
@@ -506,6 +283,7 @@
 //               componentRestrictions: { country: 'ua' }, // Ограничение по стране (Украина)
 //             }}
 //             placeholder="Введите город"
+//             className={styles.inputCity}
 //           />
 //         </label>
 
@@ -527,7 +305,7 @@
 //           />
 //         </label>
 
-//         {/* Поле метро (только если выбран город) */}
+//         {/* Поле метро (только если выбран Киев или Харьков) */}
 //         {showMetro && (
 //           <label className={styles.label}>
 //             Метро:
@@ -612,7 +390,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Autocomplete from 'react-google-autocomplete';
-import styles from '@/app/styles/Add-apartment.module.scss'; // Импорт стилей
+import styles from '@/app/styles/Add-apartment.module.scss';
 
 const AddApartment = () => {
   const [formData, setFormData] = useState({
@@ -629,7 +407,6 @@ const AddApartment = () => {
 
   const googleMapsApiKey = "AIzaSyBBFJdnxDmbAko4mbzBzJ-yozBBx_gpY3w";
 
-  // Обработка выбора города
   const handleCitySelect = (place) => {
     const formattedAddress = place?.formatted_address || '';
     setFormData((prevData) => ({
@@ -637,7 +414,6 @@ const AddApartment = () => {
       city: formattedAddress,
     }));
 
-    // Проверка, если выбран Киев или Харьков, показываем поле метро
     const city = formattedAddress.toLowerCase();
     const isKyiv = ['киев', 'київ', 'kyiv'].some((name) => city.includes(name));
     const isKharkiv = ['харьков', 'харків', 'kharkiv'].some((name) => city.includes(name));
@@ -650,7 +426,6 @@ const AddApartment = () => {
     }
   };
 
-  // Обработка отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -665,12 +440,20 @@ const AddApartment = () => {
     }
 
     try {
-      await axios.post('http://localhost:3001/api/apartments/add', data, {
+      const response = await axios.post('http://localhost:3001/api/apartments/add', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+
       alert('Квартира успешно добавлена!');
+// Отправляем событие с новой квартирой
+console.log('Отправка события apartmentAdded:', response.data);
+window.dispatchEvent(new CustomEvent('apartmentAdded', { detail: response.data }));
+
+      // Отправляем событие с данными о новой квартире
+      window.dispatchEvent(new CustomEvent('apartmentAdded', { detail: response.data }));
+
     } catch (error) {
       console.error('Ошибка при добавлении квартиры:', error);
       alert('Произошла ошибка, попробуйте еще раз.');
@@ -683,22 +466,20 @@ const AddApartment = () => {
     <div>
       <h1>Добавить квартиру</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
-        {/* Поле ввода города */}
         <label className={styles.label}>
           Город:
           <Autocomplete
             apiKey={googleMapsApiKey}
             onPlaceSelected={handleCitySelect}
             options={{
-              types: ['(cities)'], // Ограничение результата только городами
-              componentRestrictions: { country: 'ua' }, // Ограничение по стране (Украина)
+              types: ['(cities)'],
+              componentRestrictions: { country: 'ua' },
             }}
             placeholder="Введите город"
             className={styles.inputCity}
           />
         </label>
 
-        {/* Поле ввода района */}
         <label className={styles.label}>
           Район:
           <input
@@ -716,7 +497,6 @@ const AddApartment = () => {
           />
         </label>
 
-        {/* Поле метро (только если выбран Киев или Харьков) */}
         {showMetro && (
           <label className={styles.label}>
             Метро:
@@ -735,7 +515,6 @@ const AddApartment = () => {
           </label>
         )}
 
-        {/* Поле описания */}
         <label className={styles.label}>
           Описание:
           <textarea
@@ -752,7 +531,6 @@ const AddApartment = () => {
           ></textarea>
         </label>
 
-        {/* Поле цены */}
         <label className={styles.label}>
           Цена:
           <input
@@ -772,7 +550,6 @@ const AddApartment = () => {
           />
         </label>
 
-        {/* Поле загрузки фотографий */}
         <label className={styles.label}>
           Фотографии:
           <input
@@ -785,7 +562,6 @@ const AddApartment = () => {
           />
         </label>
 
-        {/* Кнопка отправки */}
         <button className={styles.button} type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Добавление...' : 'Добавить'}
         </button>

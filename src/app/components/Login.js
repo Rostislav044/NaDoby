@@ -105,7 +105,8 @@ const Login = ({ onClose }) => {
             : "Не маєте облікового запису? Зареєструватися"}
         </p>
 
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}> */}
+        <form onSubmit={(e)=>{e.preventDefault ();console.log("test")}}> 
           <button onClick={() => signIn("google")} className={styles.googleButton}>
             <Image src="/logoGoogle.svg" alt="Google" width={20} height={20} />
             {isRegister ? " Google" : " Google"}

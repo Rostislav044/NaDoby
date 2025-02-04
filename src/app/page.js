@@ -66,6 +66,7 @@
 import React from "react";
 import Header from "@/app/components/Header"; 
 import Search from "./components/Search";
+import NewRealty from "./components/NewRealty";
 
 
 export default function Home() {
@@ -73,6 +74,7 @@ export default function Home() {
     <>
       <Header /> 
       <Search/>
+      <NewRealty/>
     </>
   );
 }
