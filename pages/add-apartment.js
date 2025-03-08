@@ -27,6 +27,7 @@
 //   const [selectedLocation, setSelectedLocation] = useState(null);
 //   const [city, setCity] = useState('');
 //   const [streetError, setStreetError] = useState('');
+//   const [useManualStreetInput, setUseManualStreetInput] = useState(false); // Новое состояние для ручного ввода улицы
 
 //   // Константы
 //   const categories = ['Квартира', 'Апартаменты', 'Гостиница', 'Хостел', 'Дом', 'База отдыха', 'Сауна/Баня'];
@@ -46,8 +47,7 @@
 //     ],
 //     dnipropetrovsk: [
 //       'Вокзальна', 'Метростроителей', 'Центральна', 'Покровская', 'Проспект Свободы', 'Театральная ' // Добавлены станции для Днепра
-      
-//    ]
+//     ]
 //   };
 
 //   // Обработчики событий
@@ -84,7 +84,7 @@
 //     }
 //   };
 
-//   // Выбор улицы
+//   // Выбор улицы через Google Autocomplete
 //   const handleStreetSelect = (place) => {
 //     const address = place?.formatted_address || '';
 //     const street = address.split(',')[0]; // Извлекаем только улицу
@@ -108,6 +108,23 @@
 //     } else {
 //       setSelectedLocation(null); // Если place не определён, сбрасываем selectedLocation
 //     }
+//   };
+
+//   // Ручной ввод улицы
+//   const handleManualStreetInput = (e) => {
+//     setFormData((prevData) => ({
+//       ...prevData,
+//       street: e.target.value,
+//     }));
+//   };
+
+//   // Переключение между автодополнением и ручным вводом
+//   const toggleStreetInputMode = () => {
+//     setUseManualStreetInput(!useManualStreetInput);
+//     setFormData((prevData) => ({
+//       ...prevData,
+//       street: '', // Сбрасываем значение улицы при переключении
+//     }));
 //   };
 
 //   // Загрузка фотографий
@@ -353,17 +370,37 @@
 //         {/* Улица */}
 //         <label className={styles.label}>
 //           Улица:
-//           <Autocomplete
-//             apiKey={googleMapsApiKey}
-//             onPlaceSelected={handleStreetSelect}
-//             options={{
-//               types: ['geocode'],
-//               componentRestrictions: { country: 'ua' },
-//               fields: ['formatted_address', 'geometry'],
-//             }}
-//             placeholder="Выберите улицу"
-//             className={styles.input}
-//           />
+//           {useManualStreetInput ? (
+//             <input
+//               className={styles.input}
+//               type="text"
+//               name="street"
+//               value={formData.street}
+//               onChange={handleManualStreetInput}
+//               placeholder="Введите улицу вручную"
+//               required
+//             />
+//           ) : (
+//             <Autocomplete
+//               apiKey={googleMapsApiKey}
+//               onPlaceSelected={handleStreetSelect}
+//               options={{
+//                 types: ['geocode'],
+//                 componentRestrictions: { country: 'ua' },
+//                 fields: ['formatted_address', 'geometry'],
+//               }}
+//               placeholder="Выберите улицу"
+//               className={styles.input}
+//             />
+//           )}
+//           <button 
+          
+//             type="button"
+//             onClick={toggleStreetInputMode}
+//             className={styles.toggleButton}
+//           >
+//             {useManualStreetInput ? 'Выбрать улицу из списка' : 'Ввести улицу вручную'}
+//           </button>
 //           {streetError && <span className={styles.error}>{streetError}</span>}
 //         </label>
 
@@ -395,7 +432,6 @@
 // export default AddApartment;
 
 
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import Autocomplete from 'react-google-autocomplete';
@@ -421,7 +457,7 @@ const AddApartment = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [city, setCity] = useState('');
   const [streetError, setStreetError] = useState('');
-  const [useManualStreetInput, setUseManualStreetInput] = useState(false); // Новое состояние для ручного ввода улицы
+  const [useManualStreetInput, setUseManualStreetInput] = useState(false);
 
   // Константы
   const categories = ['Квартира', 'Апартаменты', 'Гостиница', 'Хостел', 'Дом', 'База отдыха', 'Сауна/Баня'];
@@ -440,7 +476,7 @@ const AddApartment = () => {
       'Тракторный Завод', 'Индустриальная'
     ],
     dnipropetrovsk: [
-      'Вокзальна', 'Метростроителей', 'Центральна', 'Покровская', 'Проспект Свободы', 'Театральная ' // Добавлены станции для Днепра
+      'Вокзальна', 'Метростроителей', 'Центральна', 'Покровская', 'Проспект Свободы', 'Театральная'
     ]
   };
 
@@ -455,7 +491,6 @@ const AddApartment = () => {
     }));
     setCity(formattedAddress);
 
-    // Устанавливаем центр карты на выбранный город
     if (place.geometry && place.geometry.location) {
       setSelectedLocation({
         lat: place.geometry.location.lat(),
@@ -463,16 +498,12 @@ const AddApartment = () => {
       });
     }
 
-    // Проверяем, является ли город Киевом, Харьковом или Днепром
     const cityLower = formattedAddress.toLowerCase();
     const isKyiv = ['киев', 'київ', 'kyiv'].some((name) => cityLower.includes(name));
     const isKharkiv = ['харьков', 'харків', 'kharkiv'].some((name) => cityLower.includes(name));
     const isDnipropetrovsk = ['днепр', 'дніпро', 'dnipropetrovsk'].some((name) => cityLower.includes(name));
 
-    console.log('Выбранный город:', formattedAddress);
-    console.log('Показывать метро?', isKyiv || isKharkiv || isDnipropetrovsk);
-
-    setShowMetro(isKyiv || isKharkiv || isDnipropetrovsk); // Показываем метро, если город Киев, Харьков или Днепр
+    setShowMetro(isKyiv || isKharkiv || isDnipropetrovsk);
     if (!isKyiv && !isKharkiv && !isDnipropetrovsk) {
       setFormData((prevData) => ({ ...prevData, metro: '' }));
     }
@@ -481,14 +512,13 @@ const AddApartment = () => {
   // Выбор улицы через Google Autocomplete
   const handleStreetSelect = (place) => {
     const address = place?.formatted_address || '';
-    const street = address.split(',')[0]; // Извлекаем только улицу
+    const street = address.split(',')[0];
 
-    // Проверяем, что улица находится в выбранном городе
     if (city && !address.toLowerCase().includes(city.toLowerCase())) {
       setStreetError('Улица не найдена в выбранном городе. Пожалуйста, выберите улицу из списка.');
       return;
     } else {
-      setStreetError(''); // Очищаем ошибку, если улица найдена
+      setStreetError('');
     }
 
     setFormData((prevData) => ({
@@ -496,11 +526,10 @@ const AddApartment = () => {
       street: street,
     }));
 
-    // Проверяем, что place и place.geometry существуют
     if (place && place.geometry) {
-      setSelectedLocation(place.geometry.location); // Устанавливаем точку на карте
+      setSelectedLocation(place.geometry.location);
     } else {
-      setSelectedLocation(null); // Если place не определён, сбрасываем selectedLocation
+      setSelectedLocation(null);
     }
   };
 
@@ -517,7 +546,7 @@ const AddApartment = () => {
     setUseManualStreetInput(!useManualStreetInput);
     setFormData((prevData) => ({
       ...prevData,
-      street: '', // Сбрасываем значение улицы при переключении
+      street: '',
     }));
   };
 
@@ -600,16 +629,14 @@ const AddApartment = () => {
     return [];
   };
 
-  console.log('Список метро:', getMetroStations());
-
   return (
     <div>
       <h1>Создайте объявление</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         {/* Выбор категории */}
-        <label className={styles.label} onClick={() => setShowCategories(!showCategories)}>
+        <label className={styles.label}>
           Категория:
-          <div className={styles.inputWrapper}>
+          <div className={styles.inputWrapper} onClick={() => setShowCategories(!showCategories)}>
             <input
               className={styles.input}
               type="text"
@@ -623,13 +650,17 @@ const AddApartment = () => {
         </label>
 
         {showCategories && (
-          <ul className={styles.categoryList}>
+          <div className={styles.dropdown}>
             {categories.map((cat) => (
-              <li key={cat} onClick={() => handleCategorySelect(cat)} className={styles.categoryItem}>
+              <div
+                key={cat}
+                className={styles.dropdownItem}
+                onClick={() => handleCategorySelect(cat)}
+              >
                 {cat}
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
 
         {/* Заголовок объявления */}
@@ -787,8 +818,7 @@ const AddApartment = () => {
               className={styles.input}
             />
           )}
-          <button 
-          
+          <button
             type="button"
             onClick={toggleStreetInputMode}
             className={styles.toggleButton}
