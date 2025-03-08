@@ -69,4 +69,10 @@
     pointer-events: none; /* Чтобы стрелка не мешала клику */
   }
   
-  
+  .toggleButton{
+        
+        margin-top: 17px;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid gray; /* Серый бордер */
+  }

@@ -171,7 +171,9 @@ const Search = () => {
             <option value="house">{translation.options.house}</option>
             <option value="recreationCenter">{translation.options.recreationCenter}</option>
             <option value="sauna">{translation.options.sauna}</option>
+           
           </select>
+        
           {errors.type && <span className={styles.error}>{errors.type}</span>}
         </div>
 
@@ -184,3 +186,6 @@ const Search = () => {
 };
 
 export default Search;
+
+
+
