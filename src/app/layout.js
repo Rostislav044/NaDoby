@@ -5,7 +5,7 @@
 import React from 'react';
 import {LanguageProvider} from '@/app/LanguageContext';
 import { Roboto, Lato } from 'next/font/google';
-import CreateUser from './components/CreateUser';
+// import CreateUser from './components/CreateUser';
 // Применение шрифтов:
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -27,7 +27,7 @@ export default function Layout({ children }) {
         <LanguageProvider>
           
           <main >
-          <CreateUser/> 
+          {/* <CreateUser/>  */}
             {children}</main>
         </LanguageProvider>
         </body>

@@ -67,7 +67,7 @@ import React from "react";
 import Header from "@/app/components/Header"; 
 import Search from "./components/Search";
 import NewRealty from "./components/NewRealty";
-import CreateUser from "./components/CreateUser";
+// import CreateUser from "./components/CreateUser";
 
 export default function Home() {
   return (
