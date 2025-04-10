@@ -5,7 +5,8 @@
 import React from 'react';
 import {LanguageProvider} from '@/app/LanguageContext';
 import { Roboto, Lato } from 'next/font/google';
-// import CreateUser from './components/CreateUser';
+import Providers from './providers';
+import Profile from './components/testAvtoriz';
 // Применение шрифтов:
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -23,12 +24,13 @@ export default function Layout({ children }) {
       <head />
       <body className={lato.className}>
       
-        {/* <Home /> */}
+       
         <LanguageProvider>
-          
+        <Providers>
           <main >
-          {/* <CreateUser/>  */}
+         <Profile></Profile>
             {children}</main>
+            </Providers>
         </LanguageProvider>
         </body>
     </html>
