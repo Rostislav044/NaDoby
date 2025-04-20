@@ -7,7 +7,7 @@
 // import { useLanguage } from "@/app/LanguageContext"; // Подключаем контекст для языка
 // import Image from "next/image";
 // import Login from "./Login";
-// import Menu from "@/app/components/Menu"; // Используем уже существующий Menu
+// import NoAutorazeMenu from "@/app/components/NoAutorazeMenu"; // Используем уже существующий NoAutorazeMenu
 // import styles from "@/app/styles/Header.styles.module.scss";
 
 // // Добавляем переводы для текста
@@ -49,7 +49,7 @@
 //         </p>
 //       </header>
       
-//       {isMenuOpen && <Menu />} {/* Меню отображается, когда оно открыто */}
+//       {isMenuOpen && <NoAutorazeMenu />} {/* Меню отображается, когда оно открыто */}
 //       {isLoginOpen && <Login onClose={toggleLogin} />} {/* Компонент Login отображается, когда он открыт */}
 //     </>
 //   );
@@ -61,8 +61,9 @@
 import React, { useState } from "react";
 import { useLanguage } from "@/app/LanguageContext"; // Подключаем контекст для языка
 import Image from "next/image";
-import Menu from "@/app/components/Menu"; // Используем уже существующий Menu
+import NoAutorazeMenu from "@/app/components/NoAutorazeMenu"; // Используем уже существующий NoAutorazeMenu
 import styles from "@/app/styles/Header.styles.module.scss";
+import Menu from "./Menu";
 
 // Добавляем переводы для текста
 const translations = {
@@ -80,7 +81,7 @@ export default function Header() {
     <>
       <header>
         <div className={styles.headerContainer}>
-          <p className={styles.homLogo}>NaDoby.com.ua</p>
+          <h1 className={styles.homLogo}>NaDoby.com </h1>
           
           <div className={styles.headerDiv}>
             <Image

@@ -29,7 +29,7 @@
 // import React, { useState } from "react";
 // import Image from "next/image";
 // import burgerMenu from "../../public/burger.svg";
-// import Menu from '@/app/components/Menu';
+// import NoAutorazeMenu from '@/app/components/NoAutorazeMenu';
 // import styles from "@/app/styles/header.styles.module.scss";
 
 // export default function Home() {
@@ -55,7 +55,7 @@
 //           Подобова аренда в Україні від власників.
 //         </p>
 //       </header>
-//       {isMenuOpen && <Menu />} {/* Используем компонент Menu */}
+//       {isMenuOpen && <NoAutorazeMenu />} {/* Используем компонент NoAutorazeMenu */}
 //     </>
 //   );
 // }
@@ -75,7 +75,7 @@ export default function Home() {
       <Header /> 
       {/* <CreateUser/> */}
       <Search/>
-      <NewRealty/>
+      {/* <NewRealty/> */}
     </>
   );
 }
